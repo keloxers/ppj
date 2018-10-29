@@ -1,0 +1,32 @@
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`)
+VALUES
+	(1, 'Miguel Mendez', 'keloxrers@gmail.com', '$2y$10$PukHR2/WuyES5U92AkJOHeghBsWmF2sTtCMOkgS01m4TIl700QW6e', NULL, '2018-07-10 14:43:05', '2018-07-10 14:43:05');
+
+
+
+
+INSERT INTO `abilities` (`id`, `name`, `title`, `entity_id`, `entity_type`, `only_owned`, `scope`, `created_at`, `updated_at`)
+VALUES
+	(1, 'Users', 'Manejo de usuarios, roles y permisos', NULL, NULL, 0, NULL, '2018-07-08 11:41:08', '2018-07-08 11:41:08'),
+	(2, 'Configuracion', 'Permite configurar el sistema', NULL, NULL, 0, NULL, '2018-07-08 13:23:29', '2018-07-08 13:23:29');
+
+
+  INSERT INTO `roles` (`id`, `name`, `title`, `level`, `scope`, `created_at`, `updated_at`)
+  VALUES
+  	(1, 'SuperAdministrador', 'SuperAdministrador', NULL, NULL, '2018-07-08 11:39:41', '2018-07-08 11:39:41'),
+  	(2, 'Invitado', 'Invitado', NULL, NULL, '2018-07-08 11:39:51', '2018-07-08 11:39:51'),
+  	(3, 'Administrador', 'Administrador', NULL, NULL, '2018-07-08 11:40:16', '2018-07-08 11:40:16');
+
+
+
+    INSERT INTO `assigned_roles` (`id`, `role_id`, `entity_id`, `entity_type`, `scope`)
+    VALUES
+    	(1, 1, 1, 'App\\User', NULL);
+
+
+
+      INSERT INTO `permissions` (`id`, `ability_id`, `entity_id`, `entity_type`, `forbidden`, `scope`)
+      VALUES
+      	(1, 1, 1, 'roles', 0, NULL),
+      	(2, 2, 1, 'roles', 0, NULL);
+
