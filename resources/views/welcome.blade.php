@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,15 +78,33 @@
                 </div>
             @endif
 
-            <div class="content">
-                <div class="title m-b-md">
-                    {{ config('app.name', 'Codex') }}
-                </div>
 
-                <div class="links">
-                    <a href="http://www.codex-sa.com">Codex S.A.</a>
-                </div>
-            </div>
+
+
+            @if (Route::has('login'))
+
+                    @auth
+
+
+                    @else
+                    <div class="content">
+                        <div class="title m-b-md">
+                            {{ config('app.name', 'Codex') }}
+                        </div>
+
+                        <div class="links">
+                            <a href="http://www.codex-sa.com">Codex S.A.</a>
+                        </div>
+                    </div>
+                    @endauth
+
+            @endif
+
+
+
+
+
+
         </div>
     </body>
 </html>

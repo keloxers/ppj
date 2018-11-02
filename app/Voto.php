@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Actividad extends Model
+class Voto extends Model
 {
 
-  protected $table = 'actividads';
-
+    protected $table = 'votos';
 
 
 

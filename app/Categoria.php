@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cancha extends Model
+class Categoria extends Model
 {
 
-  protected $table = 'canchas';
-
+    protected $table = 'categorias';
 
 
 

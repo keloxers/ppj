@@ -7,6 +7,8 @@ use App\User;
 use Bouncer;
 use Auth;
 
+use App\Votante;
+
 class UserController extends Controller
 {
 
@@ -55,10 +57,18 @@ class UserController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        //
-    }
+
+      public function habilitar($id)
+      {
+
+          Votante::where('users_id', $id)->update(['activo' => 0]);
+
+          $user = User::find($id);
+          $user->activo=true;
+          $user->save();
+
+          return redirect('/votantes/create');
+      }
 
 
   public function update(Request $request, $id)
@@ -71,4 +81,53 @@ class UserController extends Controller
     {
         //
     }
+
+
+      public function search(Request $request){
+        $term = $request->term;
+        $datos = User::where('name', 'like', '%'. $request->term . '%')->get();
+        $adevol = array();
+        if (count($datos) > 0) {
+          foreach ($datos as $dato)
+          {
+            $adevol[] = array(
+              'id' => $dato->id,
+              'value' => $dato->name,
+            );
+          }
+        } else {
+          $adevol[] = array(
+            'id' => 0,
+            'value' => 'no hay coincidencias para ' .  $term
+          );
+        }
+        return json_encode($adevol);
+      }
+
+
+      public function searchmesa(Request $request){
+        $term = $request->term;
+        $datos = User::where('name', 'like', '%'. $request->term . '%')
+                     ->where('activo', true)
+                     ->where('esmesa', true)
+                     ->get();
+        $adevol = array();
+        if (count($datos) > 0) {
+          foreach ($datos as $dato)
+          {
+            $adevol[] = array(
+              'id' => $dato->id,
+              'value' => $dato->name,
+            );
+          }
+        } else {
+          $adevol[] = array(
+            'id' => 0,
+            'value' => 'no hay coincidencias para ' .  $term
+          );
+        }
+        return json_encode($adevol);
+      }
+
+
 }

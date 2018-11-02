@@ -5,9 +5,12 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Http\Request;
 use Validator;
 use App\Alumno;
+use App\Votante;
+
+use App\User;
 use Bouncer;
 
-class AlumnoController extends Controller
+class VotanteController extends Controller
 {
 
 
@@ -20,9 +23,9 @@ class AlumnoController extends Controller
     }
 
 
-    $alumnos = Alumno::paginate(15);
-    $title = "alumnos";
-    return view('alumnos.index', ['alumnos' => $alumnos, 'title' => $title ]);
+    $votantes = Votante::paginate(40);
+    $title = "votantes";
+    return view('votantes.index', ['votantes' => $votantes, 'title' => $title ]);
 
 
   }
@@ -36,9 +39,10 @@ class AlumnoController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
+    $users = User::where('esmesa',true)->get();
 
-    $title = "Alumno";
-    return view('alumnos.create', ['title' => $title]);
+    $title = "Votante";
+    return view('votantes.create', ['title' => $title, 'users' => $users]);
   }
 
 
@@ -58,8 +62,8 @@ class AlumnoController extends Controller
 
 
     $validator = Validator::make($request->all(), [
-      'dni' => 'required|unique:alumnos,dni|max:8',
-
+      'users_id' => 'required|exists:users,id',
+      'alumnos_id' => 'required|exists:alumnos,id',
     ]);
 
 
@@ -73,15 +77,21 @@ class AlumnoController extends Controller
       die;
     }
 
+    $votante = new Votante;
+    $votante->users_id = $request->users_id;
+    $votante->alumnos_id = $request->alumnos_id;
+    $votante->activo = true;
+    $votante->save();
 
-    $alumno = new Alumno;
-    $alumno->apellido = $request->apellido;
-    $alumno->nombre = $request->nombre;
-    $alumno->dni = $request->dni;
-    $alumno->activo = $activo;
-    $alumno->save();
-    return redirect('/alumnos');
+    $user = User::find($request->users_id);
+    $user->activo = false;
+    $user->save();
 
+    // $alumno = Alumno::find($request->alumnos_id);
+    // $alumno->activo = false;
+    // $alumno->save();
+
+    return redirect('/votantes/create');
 
   }
 
@@ -181,16 +191,14 @@ class AlumnoController extends Controller
 
   public function search(Request $request){
     $term = $request->term;
-    $datos = alumno::where('apellido', 'like', '%'. $request->term . '%')
-                   ->where('activo', true)
-                   ->get();
+    $datos = alumno::where('apellido', 'like', '%'. $request->term . '%')->where('activo', true)->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
       {
         $adevol[] = array(
           'id' => $dato->id,
-          'value' => $dato->apellido . ', ' . $dato->nombre . ' - Dni: ' . $dato->dni,
+          'value' => $dato->apellido . ', ' . $dato->nombre,
         );
       }
     } else {
